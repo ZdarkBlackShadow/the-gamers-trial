@@ -1,0 +1,10 @@
+package routes
+
+import (
+	"github.com/ZdarkBlackShadow/the-gamers-trial/controller"
+	"github.com/gofiber/fiber/v2"
+)
+
+func RegisterDocumentTypesRoutes(group fiber.Router, hc *controller.HomeController) {
+	group.Get("/", hc.Home)
+}
