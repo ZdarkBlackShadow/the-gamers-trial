@@ -47,7 +47,7 @@ type Home struct {
 Golang Structure
 
 ```go
-type Register struct {
+type Authentification struct {
     Error     bool
     ErrorType string
     ErrorText string
@@ -113,7 +113,7 @@ type Question struct {
     }
     UserHasCorrect bool
     OldUserScore   int
-    NextUserScore  int
+    NewUserScore  int
 }
 ```
 
