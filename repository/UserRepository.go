@@ -27,3 +27,13 @@ func (r *UserRepository) AddUser(user entity.User) (entity.User, error) {
 
     return createdUser, nil
 }
+
+func (r *UserRepository) GetUserByPseudoOrEmail(pseudoOrEmail string) (entity.User, error) {
+    var user entity.User
+    err := r.db.Where("email = ? OR pseudo = ?", pseudoOrEmail, pseudoOrEmail).First(&user).Error
+    if err != nil {
+        return entity.User{}, err
+    }
+
+    return user, nil
+}
