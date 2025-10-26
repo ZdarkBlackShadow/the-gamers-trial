@@ -1,7 +1,9 @@
 package views
 
 type Profile struct {
-    Pseudo string
-    Email  string
-    Score  string
+	HasError bool
+	ErrorDetail    Error
+	Pseudo   string
+	Email    string
+	Score    string
 }
