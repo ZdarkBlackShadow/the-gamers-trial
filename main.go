@@ -39,15 +39,21 @@ func main() {
 	}
 
 	authentificationService := service.InitAuthentificationService(db)
-	rateLimiter := middleware.NewRateLimiter(30, 1 * time.Minute)
+	sessionService := service.InitSessionService()
+	rateLimiter := middleware.NewRateLimiter(30, 1*time.Minute)
 
 	homeController := controller.InitHomeController(template, authentificationService)
+	authentificationController := controller.InitAuthentificationController(template, sessionService, authentificationService)
 
 	app.Use(middleware.Logger())
 	app.Use(rateLimiter.Handle())
+	app.Use(middleware.SessionMiddleware(sessionService))
 
 	homeRoutes := app.Group("/home")
 	routes.RegisterDocumentTypesRoutes(homeRoutes, homeController)
+
+	authRoutes := app.Group("/authentification")
+	routes.RegisterAuthentificationRoutes(authRoutes, authentificationController)
 
 	log.Fatal(app.Listen(":8080"))
 }
