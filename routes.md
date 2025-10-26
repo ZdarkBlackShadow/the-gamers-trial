@@ -32,6 +32,11 @@ Golang Structure
 
 ```go
 type Home struct {
+    HasError    bool
+    ErrorDetail struct {
+        ErrorType string
+        ErrorText string
+    }
     IsLogin  bool
     UserInfo struct {
         Name  string
@@ -48,9 +53,11 @@ Golang Structure
 
 ```go
 type Authentification struct {
-    Error     bool
-    ErrorType string
-    ErrorText string
+    HasError       bool
+    ErrorDetail struct {
+        ErrorType string
+        ErrorText string
+    }
 }
 ```
 
@@ -102,6 +109,11 @@ Golang Structure
 
 ```go
 type Question struct {
+    HasError       bool
+    ErrorDetail    struct {
+        ErrorType string
+        ErrorText string
+    }
     State          bool
     ID             int
     Content        string
@@ -138,6 +150,11 @@ Golang Structure
 
 ```go
 type Profile struct {
+    HasError    bool
+    ErrorDetail struct {
+        ErrorType string
+        ErrorText string
+    }
     Pseudo string
     Email  string
     Score  string
