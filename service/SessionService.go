@@ -45,6 +45,22 @@ func (s *SessionService) CreateSession(c *fiber.Ctx, data map[string]interface{}
 	return session.Save()
 }
 
+func (s *SessionService) GetInterfaceByKeys (c *fiber.Ctx, keys []string) (map[string]interface{}, error) {
+	sess, err := s.sessionStore.Get(c)
+	if err != nil {
+		return map[string]interface{}{}, err
+	}
+
+	res := make(map[string]interface{})
+
+	for _, key := range keys {
+		value := sess.Get(key)
+		res[key] = value
+	}
+
+	return res, nil
+}
+
 func (s *SessionService) DeleteKey(sess *session.Session, key string) error {
 	sess.Delete(key)
 	return sess.Save()
