@@ -42,7 +42,7 @@ func main() {
 	sessionService := service.InitSessionService()
 	rateLimiter := middleware.NewRateLimiter(30, 1*time.Minute)
 
-	homeController := controller.InitHomeController(template, authentificationService)
+	homeController := controller.InitHomeController(template, sessionService)
 	authentificationController := controller.InitAuthentificationController(template, sessionService, authentificationService)
 
 	app.Use(middleware.Logger())
