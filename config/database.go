@@ -6,9 +6,10 @@ import (
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
-func InitDatabase() (*gorm.DB, error) {
+func InitDatabase(logger logger.Interface) (*gorm.DB, error) {
 	user := os.Getenv("DB_USER")
 	pwd := os.Getenv("DB_PASSWORD")
 	host := os.Getenv("DB_HOST")
@@ -16,7 +17,9 @@ func InitDatabase() (*gorm.DB, error) {
 	name := os.Getenv("DB_NAME")
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=true&loc=Local", user, pwd, host, port, name)
-	dbContext, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	dbContext, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		Logger: logger,
+	})
 	if err != nil {
 		return nil, err
 	}
