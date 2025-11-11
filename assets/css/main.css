@@ -15,50 +15,11 @@ body {
     align-items: center;
 }
 
-.site-header {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-.site-header h1 {
-    font-size: 2.5rem;
-    font-weight: bold;
-    text-shadow: 0 0 20px #8a2be2;
-    margin-bottom: 1rem;
-}
-
 h1 {
     text-align: center;
     font-size: 2rem;
     margin-bottom: 2rem;
     text-shadow: 0 0 15px #9370db;
-}
-
-.game-start {
-    text-align: center;
-    margin: 2rem 0;
-}
-
-.start-game-btn {
-    display: inline-block;
-    padding: 15px 30px;
-    background: linear-gradient(45deg, #8a2be2, #4b0082, #2d1b69);
-    color: #ffffff;
-    text-decoration: none;
-    border-radius: 25px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
-    transition: all 0.3s ease;
-    border: 2px solid #9370db;
-}
-
-.start-game-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(138, 43, 226, 0.6);
-    background: linear-gradient(45deg, #9d4edd, #5a0a8a, #3d2a7a);
 }
 
 footer {
@@ -71,4 +32,55 @@ footer h3 {
     font-size: 0.9rem;
     color: #9370db;
     opacity: 0.8;
+}
+
+/* Generic reusable elements */
+.back-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    display: inline-block;
+    padding: 10px 18px;
+    background: linear-gradient(45deg, #8a2be2, #4b0082, #2d1b69);
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 18px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    border: 2px solid #9370db;
+    box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(138, 43, 226, 0.6);
+}
+
+.center-card {
+    width: 90%;
+    max-width: 700px;
+    background: rgba(20, 10, 40, 0.6);
+    border: 2px solid #4b0082;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    margin: auto;
+    text-align: center;
+}
+
+.scores-list {
+    margin-top: 1.5rem;
+    display: grid;
+    gap: 0.75rem;
+}
+
+.scores-list .score-item {
+    display: flex;
+    justify-content: space-between;
+    background: rgba(75, 0, 130, 0.35);
+    border: 1px solid #8a2be2;
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
 }
