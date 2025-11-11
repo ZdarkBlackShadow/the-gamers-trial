@@ -1,0 +1,54 @@
+/* Home page specific styles */
+
+.site-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.site-header h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-shadow: 0 0 20px #8a2be2;
+    margin-bottom: 1rem;
+}
+
+.game-start {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.start-game-btn {
+    display: inline-block;
+    padding: 15px 30px;
+    background: linear-gradient(45deg, #8a2be2, #4b0082, #2d1b69);
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 25px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+    transition: all 0.3s ease;
+    border: 2px solid #9370db;
+}
+
+.start-game-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(138, 43, 226, 0.6);
+    background: linear-gradient(45deg, #9d4edd, #5a0a8a, #3d2a7a);
+}
+
+.title-image-container {
+    text-align: center;
+    margin-bottom: 2rem;
+    width: 100%;
+}
+
+.title-image {
+    max-width: 100%;
+    height: auto;
+}
+*** End Patch```} />
+
+
