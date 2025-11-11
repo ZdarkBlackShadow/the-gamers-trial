@@ -1,0 +1,55 @@
+/* Questions page specific styles */
+
+.question-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    width: 100%;
+}
+
+.question-image {
+    width: 33vw;
+    height: 33vh;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
+
+.question-text {
+    margin-top: 1.5rem;
+    font-size: 1.5rem;
+    text-shadow: 0 0 15px #9370db;
+    color: #ffffff;
+}
+
+.answers-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 600px;
+}
+
+.answer-option {
+    width: 100%;
+    padding: 20px 30px;
+    background: linear-gradient(45deg, #8a2be2, #4b0082, #2d1b69);
+    color: #ffffff;
+    text-align: center;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+    transition: all 0.3s ease;
+    border: 2px solid #9370db;
+}
+
+.answer-option:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(138, 43, 226, 0.6);
+    background: linear-gradient(45deg, #9d4edd, #5a0a8a, #3d2a7a);
+}
+*** End Patch ***!
+
+
