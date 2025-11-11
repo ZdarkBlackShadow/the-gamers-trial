@@ -35,9 +35,17 @@ func main() {
 	authentificationService := service.InitAuthentificationService(db)
 
 	homeController := controller.InitHomeController(template, authentificationService)
+	questionsController := controller.InitQuestionsController(template, authentificationService)
+	scoreController := controller.InitScoreController(template, authentificationService)
 
-    homeRoutes := app.Group("/home")
-    routes.RegisterDocumentTypesRoutes(homeRoutes, homeController)
+	homeRoutes := app.Group("/home")
+	routes.RegisterDocumentTypesRoutes(homeRoutes, homeController)
+
+	questionsRoutes := app.Group("/questions")
+	routes.RegisterQuestionsRoutes(questionsRoutes, questionsController)
+
+	scoreRoutes := app.Group("/score")
+	routes.RegisterScoreRoutes(scoreRoutes, scoreController)
 
 	log.Fatal(app.Listen(":8080"))
 }
