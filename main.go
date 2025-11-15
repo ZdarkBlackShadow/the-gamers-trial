@@ -23,6 +23,7 @@ func main() {
 	}
 
 	config.InitLogger()
+	config.InitRandomGenerator()
 
 	gormLogger := config.GormLogger{}.LogMode(0)
 
@@ -40,20 +41,25 @@ func main() {
 
 	authentificationService := service.InitAuthentificationService(db)
 	sessionService := service.InitSessionService()
+	questionService := service.InitQuestionService(db)
 	rateLimiter := middleware.NewRateLimiter(30, 1*time.Minute)
 
 	homeController := controller.InitHomeController(template, sessionService)
 	authentificationController := controller.InitAuthentificationController(template, sessionService, authentificationService)
+	questionController := controller.InitQuestionController(questionService, sessionService, template)
 
 	app.Use(middleware.Logger())
 	app.Use(rateLimiter.Handle())
 	app.Use(middleware.SessionMiddleware(sessionService))
 
 	homeRoutes := app.Group("/home")
-	routes.RegisterDocumentTypesRoutes(homeRoutes, homeController)
+	routes.RegisterHomeRoutes(homeRoutes, homeController)
 
 	authRoutes := app.Group("/authentification")
 	routes.RegisterAuthentificationRoutes(authRoutes, authentificationController)
+
+	questionRoutes := app.Group("/question")
+	routes.RegisterQuestionRoutes(questionRoutes, questionController)
 
 	log.Fatal(app.Listen(":8080"))
 }
