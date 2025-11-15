@@ -1,0 +1,81 @@
+{{define "authentification"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Gamer's Trial - Authentification</title>
+    <link rel="stylesheet" href="/static/css/main.css" />
+    <link rel="stylesheet" href="/static/css/authentification.css" />
+</head>
+<body>
+    <div class="title-image-container">
+        <img src="/static/img/titre.png" alt="The Gamer's Trial" class="title-image" />
+    </div>
+    
+    <div class="auth-container">
+        <div class="auth-tabs">
+            <button class="tab-btn active">Inscription</button>
+            <button class="tab-btn">Connexion</button>
+        </div>
+
+        {{if .HasError}}
+        <div class="error-message">
+            <p>{{.ErrorDetail.ErrorText}}</p>
+        </div>
+        {{end}}
+
+        <div id="register-form" class="auth-form active">
+            <h2>Créer un compte</h2>
+            <form action="/authentification/register" method="POST" id="registerForm">
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" name="email" required 
+                           placeholder="votre.email@exemple.com" />
+                </div>
+                <div class="form-group">
+                    <label for="register-pseudo">Pseudo</label>
+                    <input type="text" id="register-pseudo" name="pseudo" required 
+                           placeholder="Votre pseudo" />
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Mot de passe</label>
+                    <input type="password" id="register-password" name="password" required 
+                           placeholder="Votre mot de passe" />
+                </div>
+                <div class="form-group">
+                    <label for="register-password-confirm">Confirmation du mot de passe</label>
+                    <input type="password" id="register-password-confirm" name="password_confirmation" required 
+                           placeholder="Confirmez votre mot de passe" />
+                </div>
+                <button type="submit" class="submit-btn">S'inscrire</button>
+            </form>
+        </div>
+
+        <div id="login-form" class="auth-form">
+            <h2>Se connecter</h2>
+            <form action="/authentification/login" method="POST" id="loginForm">
+                <div class="form-group">
+                    <label for="login-email-pseudo">Email ou Pseudo</label>
+                    <input type="text" id="login-email-pseudo" name="email_or_pseudo" required 
+                           placeholder="Email ou pseudo" />
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Mot de passe</label>
+                    <input type="password" id="login-password" name="password" required 
+                           placeholder="Votre mot de passe" />
+                </div>
+                <button type="submit" class="submit-btn">Se connecter</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <h3> © 2025 The Gamer's Trial — Tous droits réservés.</h3>
+    </footer>
+
+    <script src="/static/js/authentification.js"></script>
+</body>
+</html>
+{{end}}
+
