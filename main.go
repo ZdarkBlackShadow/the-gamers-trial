@@ -31,7 +31,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	
 	authentificationService := service.InitAuthentificationService(db)
 
 	homeController := controller.InitHomeController(template, authentificationService)

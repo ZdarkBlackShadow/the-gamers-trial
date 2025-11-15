@@ -8,6 +8,3 @@ import (
 func RegisterQuestionsRoutes(group fiber.Router, qc *controller.QuestionsController) {
 	group.Get("/", qc.Questions)
 }
-
-
-
