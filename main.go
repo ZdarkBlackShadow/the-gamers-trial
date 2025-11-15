@@ -38,19 +38,21 @@ func main() {
 	if err != nil {
 		config.Log.Fatal("error when parsing templates:" + err.Error())
 	}
-
+	
 	authentificationService := service.InitAuthentificationService(db)
 	sessionService := service.InitSessionService()
 	questionService := service.InitQuestionService(db)
 	rateLimiter := middleware.NewRateLimiter(30, 1*time.Minute)
 
-	homeController := controller.InitHomeController(template, sessionService)
-	authentificationController := controller.InitAuthentificationController(template, sessionService, authentificationService)
-	questionController := controller.InitQuestionController(questionService, sessionService, template)
+	homeController := controller.InitHomeController(template, authentificationService)
+	questionsController := controller.InitQuestionsController(template, authentificationService)
+	scoreController := controller.InitScoreController(template, authentificationService)
 
 	app.Use(middleware.Logger())
 	app.Use(rateLimiter.Handle())
 	app.Use(middleware.SessionMiddleware(sessionService))
+	homeRoutes := app.Group("/home")
+	routes.RegisterDocumentTypesRoutes(homeRoutes, homeController)
 
 	homeRoutes := app.Group("")
 	routes.RegisterHomeRoutes(homeRoutes, homeController)
@@ -58,8 +60,11 @@ func main() {
 	authRoutes := app.Group("/authentification")
 	routes.RegisterAuthentificationRoutes(authRoutes, authentificationController)
 
-	questionRoutes := app.Group("/question")
-	routes.RegisterQuestionRoutes(questionRoutes, questionController)
+	questionsRoutes := app.Group("/questions")
+	routes.RegisterQuestionsRoutes(questionsRoutes, questionsController)
+
+	scoreRoutes := app.Group("/score")
+	routes.RegisterScoreRoutes(scoreRoutes, scoreController)
 
 	log.Fatal(app.Listen(":8080"))
 }
