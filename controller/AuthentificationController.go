@@ -41,7 +41,7 @@ func (ac *AuthentificationController) Authentification(c *fiber.Ctx) error {
 		if errStruct, ok := potentialErr.(views.Error); ok {
 			authStruct.ErrorDetail = errStruct
 			authStruct.HasError = true
-			err = ac.sessionService.DeleteKey(sess, "error")
+			//err = ac.sessionService.DeleteKey(sess, "error")
 		} else {
 			config.Log.Error("Error type in session is not views.Authentification")
 		}
@@ -83,6 +83,7 @@ func (ac *AuthentificationController) Register(c *fiber.Ctx) error {
 		}
 		return c.Redirect("/authentification", fiber.StatusSeeOther)
 	}
+	config.Log.Debug("test")
 
 	err = ac.sessionService.CreateSession(c, map[string]interface{}{"user": newUser})
 	if err != nil {

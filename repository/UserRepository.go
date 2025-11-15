@@ -21,7 +21,7 @@ func (r *UserRepository) AddUser(user entity.User) (entity.User, error) {
     }
 
     var createdUser entity.User
-    if err := r.db.First(&createdUser, user.ID).Error; err != nil {
+    if err := r.db.Where("id = ?", user.ID).First(&createdUser).Error; err != nil {
         return entity.User{}, err
     }
 
