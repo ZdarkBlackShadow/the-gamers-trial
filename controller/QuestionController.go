@@ -103,7 +103,7 @@ func (qc *QuestionController) Home(c *fiber.Ctx) error {
 		}
 	}
 	c.Set("Content-Type", "text/html; charset=utf-8")
-	err = qc.template.ExecuteTemplate(c.Response().BodyWriter(), "home", data)
+	err = qc.template.ExecuteTemplate(c.Response().BodyWriter(), "question", data)
 	if err != nil {
 		config.Log.Error("Error when rendering the template:" + err.Error())
 		return fiber.DefaultErrorHandler(c, err)
