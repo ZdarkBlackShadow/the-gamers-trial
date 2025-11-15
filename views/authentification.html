@@ -19,7 +19,7 @@
             <button class="tab-btn">Connexion</button>
         </div>
 
-        {{if .HasError}}
+        {{if eq .HasError true}}
         <div class="error-message">
             <p>{{.ErrorDetail.ErrorText}}</p>
         </div>

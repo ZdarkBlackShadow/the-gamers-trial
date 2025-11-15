@@ -64,15 +64,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else if (response.ok) {
                     // Si pas de redirection mais OK, on redirige quand même
                     window.location.href = '/home';
-                } else {
-                    // En cas d'erreur, on recharge la page pour afficher l'erreur depuis la session
-                    window.location.href = '/authentification';
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
                 // En cas d'erreur réseau, on recharge quand même pour voir l'erreur
-                window.location.href = '/authentification';
             });
         });
     }
@@ -102,15 +98,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else if (response.ok) {
                     // Si pas de redirection mais OK, on redirige quand même
                     window.location.href = '/home';
-                } else {
-                    // En cas d'erreur, on recharge la page pour afficher l'erreur depuis la session
-                    window.location.href = '/authentification';
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
                 // En cas d'erreur réseau, on recharge quand même pour voir l'erreur
-                window.location.href = '/authentification';
             });
         });
     }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/gob"
 	"html/template"
 	"log"
 	"time"
@@ -8,6 +9,7 @@ import (
 	"github.com/ZdarkBlackShadow/the-gamers-trial/config"
 	"github.com/ZdarkBlackShadow/the-gamers-trial/controller"
 	"github.com/ZdarkBlackShadow/the-gamers-trial/middleware"
+	"github.com/ZdarkBlackShadow/the-gamers-trial/model/views"
 	"github.com/ZdarkBlackShadow/the-gamers-trial/routes"
 	"github.com/ZdarkBlackShadow/the-gamers-trial/service"
 	"github.com/gofiber/fiber/v2"
@@ -15,6 +17,7 @@ import (
 )
 
 func main() {
+	gob.Register(views.Error{})
 	app := fiber.New()
 
 	err := gotenv.Load()

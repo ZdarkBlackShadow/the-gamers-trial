@@ -48,7 +48,7 @@ func (ac *AuthentificationController) Authentification(c *fiber.Ctx) error {
 	} else {
 		authStruct.HasError = false
 	}
-
+	config.Log.Debug(authStruct)
 	c.Set("Content-Type", "text/html; charset=utf-8")
 
 	err = ac.template.ExecuteTemplate(c.Response().BodyWriter(), "authentification", authStruct)
@@ -68,6 +68,7 @@ func (ac *AuthentificationController) Register(c *fiber.Ctx) error {
 		errStruct := util.CreateError(fiber.ErrBadRequest.Message, "the json is incorrect")
 		err = ac.sessionService.CreateSession(c, map[string]interface{}{"error": errStruct})
 		if err != nil {
+			config.Log.Error("error when trying to save the session : " + err.Error())
 			return fiber.DefaultErrorHandler(c, err)
 		}
 		return c.Redirect("/authentification", fiber.StatusSeeOther)
@@ -77,6 +78,7 @@ func (ac *AuthentificationController) Register(c *fiber.Ctx) error {
 	if hasError {
 		err = ac.sessionService.CreateSession(c, map[string]interface{}{"error": errorDetail})
 		if err != nil {
+			config.Log.Error("error when trying to save the session : " + err.Error())
 			return fiber.DefaultErrorHandler(c, err)
 		}
 		return c.Redirect("/authentification", fiber.StatusSeeOther)
