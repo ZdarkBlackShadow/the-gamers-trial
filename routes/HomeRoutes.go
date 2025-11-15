@@ -6,5 +6,6 @@ import (
 )
 
 func RegisterHomeRoutes(group fiber.Router, hc *controller.HomeController) {
-	group.Get("/", hc.Home)
+	group.Get("/home", hc.Home)
+	group.Get("/", hc.RedirectionHome)
 }

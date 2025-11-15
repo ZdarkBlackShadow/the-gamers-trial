@@ -52,7 +52,7 @@ func main() {
 	app.Use(rateLimiter.Handle())
 	app.Use(middleware.SessionMiddleware(sessionService))
 
-	homeRoutes := app.Group("/home")
+	homeRoutes := app.Group("")
 	routes.RegisterHomeRoutes(homeRoutes, homeController)
 
 	authRoutes := app.Group("/authentification")

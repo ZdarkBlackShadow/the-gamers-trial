@@ -54,3 +54,7 @@ func (hc *HomeController) Home(c *fiber.Ctx) error {
 	}
 	return nil
 }
+
+func (hc *HomeController) RedirectionHome(c *fiber.Ctx) error {
+	 return c.Redirect("/home")
+}
