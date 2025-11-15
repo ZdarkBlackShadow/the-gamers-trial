@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func RegisterDocumentTypesRoutes(group fiber.Router, hc *controller.HomeController) {
-	group.Get("/", hc.Home)
+func RegisterHomeRoutes(group fiber.Router, hc *controller.HomeController) {
+	group.Get("/home", hc.Home)
+	group.Get("/", hc.RedirectionHome)
 }
