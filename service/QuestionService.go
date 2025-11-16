@@ -23,6 +23,7 @@ func InitQuestionService(db *gorm.DB) *QuestionService {
 	return &QuestionService{
 		optionRepo:   repository.InitOptionRepository(db),
 		questionRepo: repository.InitQuestionRepository(db),
+		userRepo:     repository.InitUserRepository(db),
 	}
 }
 
@@ -39,24 +40,34 @@ func (s *QuestionService) ResponseAnalysis(req request.Question, user entity.Use
 	}
 
 	options, err := s.optionRepo.GetAllOptionsByQuestionId(uint(req.QuestionID))
-	var updatedUser entity.User
+	if err != nil {
+		config.Log.Error("error when getting all options: " + err.Error())
+		return fiber.ErrInternalServerError.Message, session.UserAnswer{}, entity.User{}, err
+	}
+	
+	sessionData.OldUserScore = user.Score
+	var updatedUser entity.User = user
+	
 	for _, op := range options {
 		if op.Correct {
 			if op.ID == option.ID {
 				sessionData.UserHasCorrect = true
 				sessionData.GoodOption = op.Text
-				sessionData.OldUserScore = user.Score
 				user.Score += 500
 				updatedUser, err = s.userRepo.UpdateUser(user)
 				if err != nil {
 					config.Log.Error("error when updated user:" + err.Error())
 					return fiber.ErrInternalServerError.Message, session.UserAnswer{}, entity.User{}, err
 				}
-				break
+				sessionData.NewUserScore = updatedUser.Score
+				return "", sessionData, updatedUser, nil
 			}
 		}
 	}
-
+	
+	// Réponse incorrecte
+	sessionData.UserHasCorrect = false
+	sessionData.NewUserScore = user.Score
 	return "", sessionData, updatedUser, nil
 }
 
