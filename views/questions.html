@@ -1,0 +1,68 @@
+{{define "questions"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Gamer's Trial</title>
+    <link rel="stylesheet" href="/static/css/main.css" />
+    <link rel="stylesheet" href="/static/css/questions.css" />
+    <script src="/static/js/questions.js"></script>
+</head>
+<body>
+    {{if .HasError}}
+    <div class="error-container">
+        <p class="error-type">{{.ErrorDetail.ErrorType}}</p>
+        <p class="error-text">{{.ErrorDetail.ErrorText}}</p>
+    </div>
+    {{end}}
+    
+    {{if .State}}
+    {{/* User must answer the question */}}
+    {{if .HasImage}}
+    <div class="question-image-container">
+        <img src="/image/{{.ImagePath}}" alt="Question Image" class="question-content-image" />
+    </div>
+    {{end}}
+    
+    <div class="question-header">
+        <p class="question-text">{{.Content}}</p>
+    </div>
+    
+    <div class="answers-container" data-question-id="{{.ID}}">
+        {{range .Options}}
+        <div class="answer-option clickable" data-option-id="{{.ID}}">
+            {{.Text}}
+        </div>
+        {{end}}
+    </div>
+    {{else}}
+    {{/* User has already answered - show result */}}
+    {{if .HasImage}}
+    <div class="question-image-container">
+        <img src="/image/{{.ImagePath}}" alt="Question Image" class="question-content-image" />
+    </div>
+    {{end}}
+    
+    <div class="question-header">
+        <p class="question-text">{{.Content}}</p>
+    </div>
+    
+    <div class="result-container">
+        {{if .UserHasCorrect}}
+        <p class="result-message correct">Bravo ! Votre réponse est correcte.</p>
+        {{else}}
+        <p class="result-message incorrect">Malheureusement, ce n'est pas la bonne réponse.</p>
+        {{end}}
+        
+        <div class="score-info">
+            <p>Ancien Score: {{.OldUserScore}}</p>
+            <p>Votre nouveau Score: {{.NewUserScore}}</p>
+        </div>
+        
+        <p class="redirect-message">Prochaine question dans <span id="countdown">5</span> secondes...</p>
+    </div>
+    {{end}}
+</body>
+</html>
+{{end}}

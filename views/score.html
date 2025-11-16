@@ -1,0 +1,26 @@
+{{define "score"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Gamer's Trial - Score</title>
+    <link rel="stylesheet" href="/static/css/main.css" />
+</head>
+<body>
+    <a href="/home" class="back-btn">← Retour</a>
+
+    <div class="center-card">
+        <h1>Score</h1>
+        <div class="scores-list">
+            {{range .List}}
+            <div class="score-item">
+                <span>{{.Pseudo}}</span>
+                <span>{{.Score}}</span>
+            </div>
+            {{end}}
+        </div>
+    </div>
+</body>
+</html>
+{{end}}
