@@ -1,4 +1,4 @@
-{{define "questions"}}
+{{define "question"}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,21 +19,20 @@
     
     {{if .State}}
     {{/* User must answer the question */}}
-    <div class="question-header">
-        <img src="/static/img/logo.png" alt="Question" class="question-image" />
-        <p class="question-text">{{.Content}}</p>
-    </div>
-    
     {{if .HasImage}}
     <div class="question-image-container">
         <img src="/image/{{.ImagePath}}" alt="Question Image" class="question-content-image" />
     </div>
     {{end}}
     
+    <div class="question-header">
+        <p class="question-text">{{.Content}}</p>
+    </div>
+    
     <form id="question-form">
         <input type="hidden" id="question_id" value="{{.ID}}" />
         <div class="answers-container">
-            {{range .Option}}
+            {{range .Options}}
             <div class="answer-option" data-option-id="{{.ID}}">
                 <input type="radio" name="user_answer_id" value="{{.ID}}" id="option-{{.ID}}" />
                 <label for="option-{{.ID}}">{{.Text}}</label>
@@ -44,16 +43,15 @@
     </form>
     {{else}}
     {{/* User has already answered - show result */}}
-    <div class="question-header">
-        <img src="/static/img/logo.png" alt="Question" class="question-image" />
-        <p class="question-text">{{.Content}}</p>
-    </div>
-    
     {{if .HasImage}}
     <div class="question-image-container">
         <img src="/image/{{.ImagePath}}" alt="Question Image" class="question-content-image" />
     </div>
     {{end}}
+    
+    <div class="question-header">
+        <p class="question-text">{{.Content}}</p>
+    </div>
     
     <div class="result-container">
         {{if .UserHasCorrect}}
