@@ -17,7 +17,7 @@ func InitQuestionRepository(db *gorm.DB) *QuestionRepository {
 
 func (r *QuestionRepository) GetQuestionById(id uint) (entity.Question, error) {
 	var question entity.Question
-	err := r.db.Where("id = ?", id).First(&question).Error
+	err := r.db.Preload("Image").Where("id = ?", id).First(&question).Error
 	if err != nil {
 		return entity.Question{}, err
 	}
