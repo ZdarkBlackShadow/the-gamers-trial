@@ -1,44 +1,58 @@
-// Handle question form submission
-function initQuestionForm() {
-    const questionForm = document.getElementById('question-form');
-    if (!questionForm) return;
+// Handle answer option clicks
+function initQuestionOptions() {
+    const answersContainer = document.querySelector('.answers-container');
+    if (!answersContainer) return;
     
-    questionForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const questionId = parseInt(document.getElementById('question_id').value);
-        const selectedAnswer = document.querySelector('input[name="user_answer_id"]:checked');
-        
-        if (!selectedAnswer) {
-            alert('Please select an answer');
-            return;
-        }
-        
-        const userAnswerId = parseInt(selectedAnswer.value);
-        
-        fetch('/question', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                question_id: questionId,
-                user_answer_id: userAnswerId
-            })
-        })
-        .then(response => {
-            if (response.redirected) {
-                window.location.href = response.url;
-            } else {
-                return response.text().then(html => {
-                    document.open();
-                    document.write(html);
-                    document.close();
-                });
+    const questionId = parseInt(answersContainer.getAttribute('data-question-id'));
+    const answerOptions = answersContainer.querySelectorAll('.answer-option.clickable');
+    
+    answerOptions.forEach(option => {
+        option.addEventListener('click', function(e) {
+            // Prevent multiple clicks
+            if (this.classList.contains('submitting')) {
+                return;
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while submitting your answer');
+            
+            // Disable all options to prevent multiple submissions
+            answerOptions.forEach(opt => {
+                opt.classList.add('submitting');
+                opt.style.pointerEvents = 'none';
+                opt.style.opacity = '0.6';
+            });
+            
+            const userAnswerId = parseInt(this.getAttribute('data-option-id'));
+            
+            fetch('/question', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    question_id: questionId,
+                    user_answer_id: userAnswerId
+                })
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    return response.text().then(html => {
+                        document.open();
+                        document.write(html);
+                        document.close();
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while submitting your answer');
+                // Re-enable options on error
+                answerOptions.forEach(opt => {
+                    opt.classList.remove('submitting');
+                    opt.style.pointerEvents = 'auto';
+                    opt.style.opacity = '1';
+                });
+            });
         });
     });
 }
@@ -61,7 +75,7 @@ function initCountdown() {
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
-    initQuestionForm();
+    initQuestionOptions();
     initCountdown();
 });
 
