@@ -62,13 +62,13 @@ function initCountdown() {
     const countdownElement = document.getElementById('countdown');
     if (!countdownElement) return;
     
-    let countdown = 30;
+    let countdown = 5;
     const interval = setInterval(() => {
         countdown--;
         countdownElement.textContent = countdown;
         if (countdown <= 0) {
             clearInterval(interval);
-            window.location.href = '/question';
+            window.location.href = '/questions?next=true';
         }
     }, 1000);
 }

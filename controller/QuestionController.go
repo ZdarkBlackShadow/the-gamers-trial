@@ -31,7 +31,8 @@ func (qc *QuestionController) Response(c *fiber.Ctx) error {
 	var req request.Question
 	err := c.BodyParser(&req)
 	if err != nil {
-		return nil
+		config.Log.Error("error when parsing request body: " + err.Error())
+		return fiber.DefaultErrorHandler(c, fiber.ErrBadRequest)
 	}
 	details, err := qc.sessionService.GetInterfaceByKeys(c, []string{"user"})
 	if err != nil {
@@ -50,21 +51,37 @@ func (qc *QuestionController) Response(c *fiber.Ctx) error {
 		config.Log.Error(message + ":" + err.Error())
 		return fiber.DefaultErrorHandler(c, err)
 	}
-	err = qc.sessionService.CreateSession(c, map[string]interface{}{"user": updatedUser, "user_answer": sessionAnswer})
+	err = qc.sessionService.CreateSession(c, map[string]interface{}{"user": updatedUser, "user_answer": sessionAnswer, "state": false})
 	if err != nil {
 		return fiber.DefaultErrorHandler(c, err)
 	}
-	return c.Redirect("/question", fiber.StatusSeeOther)
+	return c.Redirect("/questions", fiber.StatusSeeOther)
 }
 
 func (qc *QuestionController) Home(c *fiber.Ctx) error {
 	data := views.Question{}
+
+	// Vérifier si on doit passer à la question suivante (paramètre next=true)
+	nextQuestion := c.Query("next") == "true"
+
 	details, err := qc.sessionService.GetInterfaceByKeys(c, []string{"state", "user_answer"})
 	if err != nil {
 		config.Log.Error("Error when read the session:" + err.Error())
 		data.HasError = true
 		data.ErrorDetail = util.CreateError(fiber.ErrInternalServerError.Message, "error when loading your data")
 	} else {
+		// Si next=true, supprimer state et user_answer pour afficher une nouvelle question
+		if nextQuestion {
+			sess, err := qc.sessionService.GetSession(c)
+			if err == nil {
+				sess.Delete("state")
+				sess.Delete("user_answer")
+				sess.Save()
+			}
+			details["state"] = nil
+			details["user_answer"] = nil
+		}
+
 		if details["state"] == nil {
 			data.State = true
 		} else {
@@ -112,7 +129,7 @@ func (qc *QuestionController) Home(c *fiber.Ctx) error {
 		}
 	}
 	c.Set("Content-Type", "text/html; charset=utf-8")
-	err = qc.template.ExecuteTemplate(c.Response().BodyWriter(), "question", data)
+	err = qc.template.ExecuteTemplate(c.Response().BodyWriter(), "questions", data)
 	if err != nil {
 		config.Log.Error("Error when rendering the template:" + err.Error())
 		return fiber.DefaultErrorHandler(c, err)

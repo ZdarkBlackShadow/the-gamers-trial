@@ -12,7 +12,7 @@ This file describe the routes of the app
         - [ ] POST
     - `/logout`
         - [ ] POST
-- `/question`
+- `/questions`
     - [ ] GET
     - [ ] POST
 - `/profile`
@@ -101,7 +101,7 @@ expected JSON from the front
 
 just a request **POST** for logout the connected user
 
-### `/question`
+### `/questions`
 
 - #### GET
 
