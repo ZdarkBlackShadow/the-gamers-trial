@@ -1,4 +1,4 @@
-{{define "question"}}
+{{define "questions"}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,17 +50,17 @@
     
     <div class="result-container">
         {{if .UserHasCorrect}}
-        <p class="result-message correct">Correct! Well done!</p>
+        <p class="result-message correct">Bravo ! Votre réponse est correcte.</p>
         {{else}}
-        <p class="result-message incorrect">Incorrect. Better luck next time!</p>
+        <p class="result-message incorrect">Malheureusement, ce n'est pas la bonne réponse.</p>
         {{end}}
         
         <div class="score-info">
-            <p>Previous Score: {{.OldUserScore}}</p>
-            <p>New Score: {{.NewUserScore}}</p>
+            <p>Ancien Score: {{.OldUserScore}}</p>
+            <p>Votre nouveau Score: {{.NewUserScore}}</p>
         </div>
         
-        <p class="redirect-message">Redirecting to next question in <span id="countdown">30</span> seconds...</p>
+        <p class="redirect-message">Prochaine question dans <span id="countdown">5</span> secondes...</p>
     </div>
     {{end}}
 </body>
