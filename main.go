@@ -47,12 +47,15 @@ func main() {
 	authentificationService := service.InitAuthentificationService(db)
 	sessionService := service.InitSessionService()
 	questionService := service.InitQuestionService(db)
+	imageService := service.InitImageService(db, "./public")
+
 	rateLimiter := middleware.NewRateLimiter(30, 1*time.Minute)
 
 	homeController := controller.InitHomeController(template, sessionService)
 	authentificationController := controller.InitAuthentificationController(template, sessionService, authentificationService)
 	questionsController := controller.InitQuestionController(questionService, sessionService, template)
 	scoreController := controller.InitScoreController(template, authentificationService)
+	imageController := controller.InitImageController(imageService)
 
 	app.Use(middleware.Logger())
 	app.Use(rateLimiter.Handle())
@@ -69,6 +72,9 @@ func main() {
 
 	scoreRoutes := app.Group("/score")
 	routes.RegisterScoreRoutes(scoreRoutes, scoreController)
+
+	imageRoutes := app.Group("/image")
+	routes.RegisterImageRoutes(imageRoutes, imageController)
 
 	log.Fatal(app.Listen(":8080"))
 }
