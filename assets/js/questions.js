@@ -22,7 +22,7 @@ function initQuestionOptions() {
             
             const userAnswerId = parseInt(this.getAttribute('data-option-id'));
             
-            fetch('/question', {
+            fetch('/questions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
