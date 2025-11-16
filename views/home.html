@@ -15,16 +15,34 @@
     </div>
     <header class="site-header">
     </header>
-    <h1> Welcome {{.Name}} </h1>
     
-    <div class="game-start">
-        <a href="/questions" class="start-game-btn">Start Game</a>
-        <br /><br />
-        <a href="/score" class="start-game-btn">Scores</a>
+    {{if .HasError}}
+    <div class="error-container">
+        <p class="error-type">{{.ErrorDetail.ErrorType}}</p>
+        <p class="error-text">{{.ErrorDetail.ErrorText}}</p>
     </div>
+    {{end}}
+    
+    {{if .IsLogin}}
+        <h1>Welcome {{.UserInfo.Name}}</h1>
+        {{if .UserInfo.Score}}
+        <p class="user-score">Your Score: {{.UserInfo.Score}}</p>
+        {{end}}
+        
+        <div class="game-start">
+            <a href="/questions" class="start-game-btn">Start Game</a>
+            <br /><br />
+            <a href="/score" class="start-game-btn">Scores</a>
+        </div>
+    {{else}}
+        <h1>Welcome to The Gamer's Trial</h1>
+        <div class="game-start">
+            <a href="/authentification" class="start-game-btn">Login or Register</a>
+        </div>
+    {{end}}
     
     <footer>
-        <h3> © 2025 The Gamer’s Trial — Tous droits réservés.</h3>
+        <h3> © 2025 The Gamer's Trial — Tous droits réservés.</h3>
     </footer>
 </body>
 </html>
