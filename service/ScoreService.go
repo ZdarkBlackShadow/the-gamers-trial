@@ -19,13 +19,13 @@ func InitScoreService(db *gorm.DB) *ScoreService {
 }
 
 func (s *ScoreService) GetRanking() (string, []views.UserScore, error) {
-	userAndScore, err := s.userRepo.GetPseudosAndScores()
+	allUser, err := s.userRepo.GetAllUser()
 	if err != nil {
 		config.Log.Error("error when trying to get user and score: " + err.Error())
 		return fiber.ErrInternalServerError.Message, []views.UserScore{}, err
 	}
 	var ranking []views.UserScore
-	for _, data := range userAndScore {
+	for _, data := range allUser {
 		ranking = append(ranking, views.UserScore{Pseudo: data.Pseudo, Score: data.Score})
 	}
 	return "", ranking, nil

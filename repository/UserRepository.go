@@ -59,16 +59,10 @@ func (r *UserRepository) UpdateUser(user entity.User) (entity.User, error) {
     return updatedUser, nil
 }
 
-func (r *UserRepository) GetPseudosAndScores() ([]struct {
-	Pseudo string `gorm:"column:pseudo"`
-	Score  int    `gorm:"column:score"`
-}, error) {
-	var results []struct {
-		Pseudo string `gorm:"column:pseudo"`
-		Score  int    `gorm:"column:score"`
-	}
+func (r *UserRepository) GetAllUser() ([]entity.User, error) {
+	var results []entity.User
 
-	err := r.db.Select("pseudo, score").Find(&results).Error
+	err := r.db.Order("score DESC").Find(&results).Error
 	if err != nil {
 		return nil, err
 	}
