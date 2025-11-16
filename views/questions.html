@@ -29,18 +29,13 @@
         <p class="question-text">{{.Content}}</p>
     </div>
     
-    <form id="question-form">
-        <input type="hidden" id="question_id" value="{{.ID}}" />
-        <div class="answers-container">
-            {{range .Options}}
-            <div class="answer-option" data-option-id="{{.ID}}">
-                <input type="radio" name="user_answer_id" value="{{.ID}}" id="option-{{.ID}}" />
-                <label for="option-{{.ID}}">{{.Text}}</label>
-            </div>
-            {{end}}
+    <div class="answers-container" data-question-id="{{.ID}}">
+        {{range .Options}}
+        <div class="answer-option clickable" data-option-id="{{.ID}}">
+            {{.Text}}
         </div>
-        <button type="submit" class="submit-answer-btn">Submit Answer</button>
-    </form>
+        {{end}}
+    </div>
     {{else}}
     {{/* User has already answered - show result */}}
     {{if .HasImage}}

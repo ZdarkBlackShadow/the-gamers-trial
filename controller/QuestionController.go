@@ -87,8 +87,17 @@ func (qc *QuestionController) Home(c *fiber.Ctx) error {
 				for _, option := range options {
 					data.Options = append(data.Options, views.Option{ID: option.ID, Text: option.Text})
 				}
-				data.HasImage = true
-				data.ImagePath = question.Image.Path
+				if question.Image.Path != "" {
+					data.HasImage = true
+					// Remove leading slash if present, as the route /image/:path_of_image will handle it
+					imagePath := question.Image.Path
+					if len(imagePath) > 0 && imagePath[0] == '/' {
+						imagePath = imagePath[1:]
+					}
+					data.ImagePath = imagePath
+				} else {
+					data.HasImage = false
+				}
 			}
 		} else if !data.State {
 			userAnswer, ok := details["user_answer"].(session.UserAnswer)
