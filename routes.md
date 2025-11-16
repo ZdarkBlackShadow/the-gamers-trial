@@ -21,6 +21,8 @@ This file describe the routes of the app
     - [ ] DELETE
 - `/image/:path_of_image`
     - [ ] GET
+- `/score`
+    - [ ] GET
 
 ## Details
 
@@ -181,3 +183,23 @@ just a **DELETE** request for delete the user who are connected.
 - ### GET
 
 Send the image of the path.
+
+### `/score`
+
+- ### GET
+
+Golang Structure
+
+```go
+type Profile struct {
+    HasError    bool
+    ErrorDetail struct {
+        ErrorType string
+        ErrorText string
+    }
+    List struct {
+        Pseudo string
+	    Score int
+    }
+}
+```

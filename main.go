@@ -42,12 +42,13 @@ func main() {
 	authentificationService := service.InitAuthentificationService(db)
 	sessionService := service.InitSessionService()
 	questionService := service.InitQuestionService(db)
+	scoreService := service.InitScoreService(db)
 	rateLimiter := middleware.NewRateLimiter(30, 1*time.Minute)
 
 	homeController := controller.InitHomeController(template, sessionService)
 	authentificationController := controller.InitAuthentificationController(template, sessionService, authentificationService)
 	questionsController := controller.InitQuestionController(questionService, sessionService, template)
-	scoreController := controller.InitScoreController(template, authentificationService)
+	scoreController := controller.InitScoreController(template, authentificationService, scoreService)
 
 	app.Use(middleware.Logger())
 	app.Use(rateLimiter.Handle())
