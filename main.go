@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/gob"
 	"html/template"
 	"log"
 	"time"
@@ -8,6 +9,9 @@ import (
 	"github.com/ZdarkBlackShadow/the-gamers-trial/config"
 	"github.com/ZdarkBlackShadow/the-gamers-trial/controller"
 	"github.com/ZdarkBlackShadow/the-gamers-trial/middleware"
+	"github.com/ZdarkBlackShadow/the-gamers-trial/model/entity"
+	"github.com/ZdarkBlackShadow/the-gamers-trial/model/session"
+	"github.com/ZdarkBlackShadow/the-gamers-trial/model/views"
 	"github.com/ZdarkBlackShadow/the-gamers-trial/routes"
 	"github.com/ZdarkBlackShadow/the-gamers-trial/service"
 	"github.com/gofiber/fiber/v2"
@@ -15,6 +19,9 @@ import (
 )
 
 func main() {
+	gob.Register(views.Error{})
+	gob.Register(entity.User{})
+	gob.Register(session.UserAnswer{})
 	app := fiber.New()
 
 	err := gotenv.Load()
@@ -43,12 +50,15 @@ func main() {
 	sessionService := service.InitSessionService()
 	questionService := service.InitQuestionService(db)
 	scoreService := service.InitScoreService(db)
+	imageService := service.InitImageService(db, "./public")
+
 	rateLimiter := middleware.NewRateLimiter(30, 1*time.Minute)
 
 	homeController := controller.InitHomeController(template, sessionService)
 	authentificationController := controller.InitAuthentificationController(template, sessionService, authentificationService)
 	questionsController := controller.InitQuestionController(questionService, sessionService, template)
 	scoreController := controller.InitScoreController(template, authentificationService, scoreService)
+	imageController := controller.InitImageController(imageService)
 
 	app.Use(middleware.Logger())
 	app.Use(rateLimiter.Handle())
@@ -65,6 +75,9 @@ func main() {
 
 	scoreRoutes := app.Group("/score")
 	routes.RegisterScoreRoutes(scoreRoutes, scoreController)
+
+	imageRoutes := app.Group("/image")
+	routes.RegisterImageRoutes(imageRoutes, imageController)
 
 	log.Fatal(app.Listen(":8080"))
 }
