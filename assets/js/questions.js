@@ -62,7 +62,7 @@ function initCountdown() {
     const countdownElement = document.getElementById('countdown');
     if (!countdownElement) return;
     
-    let countdown = 5;
+    let countdown = 3;
     const interval = setInterval(() => {
         countdown--;
         countdownElement.textContent = countdown;
