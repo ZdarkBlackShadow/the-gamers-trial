@@ -44,16 +44,18 @@ func (s *QuestionService) ResponseAnalysis(req request.Question, user entity.Use
 		config.Log.Error("error when getting all options: " + err.Error())
 		return fiber.ErrInternalServerError.Message, session.UserAnswer{}, entity.User{}, err
 	}
-	
+
 	sessionData.OldUserScore = user.Score
 	var updatedUser entity.User = user
-	
+
 	for _, op := range options {
 		if op.Correct {
 			if op.ID == option.ID {
 				sessionData.UserHasCorrect = true
 				sessionData.GoodOption = op.Text
-				user.Score += 500
+				pointsEarned := calculatePointsFromResponseTime(req.ResponseTimeMs)
+				sessionData.QuestionScore = pointsEarned
+				user.Score += pointsEarned
 				updatedUser, err = s.userRepo.UpdateUser(user)
 				if err != nil {
 					config.Log.Error("error when updated user:" + err.Error())
@@ -64,11 +66,37 @@ func (s *QuestionService) ResponseAnalysis(req request.Question, user entity.Use
 			}
 		}
 	}
-	
+
 	// Réponse incorrecte
 	sessionData.UserHasCorrect = false
+	sessionData.QuestionScore = 0
 	sessionData.NewUserScore = user.Score
 	return "", sessionData, updatedUser, nil
+}
+
+func calculatePointsFromResponseTime(responseTimeMs int) int {
+	if responseTimeMs <= 0 {
+		responseTimeMs = 0
+	}
+
+	if responseTimeMs <= 1000 {
+		return 500
+	}
+
+	extraTimeMs := responseTimeMs - 1000
+
+	if extraTimeMs >= 4000 {
+		return 100
+	}
+
+	steps := extraTimeMs / 250
+	points := 500 - (steps * 25)
+
+	if points < 100 {
+		return 100
+	}
+
+	return points
 }
 
 func (s *QuestionService) GetRandomQuestion() ([]entity.Option, entity.Question, error) {

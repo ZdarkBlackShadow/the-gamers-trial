@@ -125,6 +125,7 @@ func (qc *QuestionController) Home(c *fiber.Ctx) error {
 				data.NewUserScore = userAnswer.NewUserScore
 				data.UserHasCorrect = userAnswer.UserHasCorrect
 				data.OldUserScore = userAnswer.OldUserScore
+				data.QuestionScore = userAnswer.QuestionScore
 			}
 		}
 	}
