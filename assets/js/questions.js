@@ -5,6 +5,7 @@ function initQuestionOptions() {
     
     const questionId = parseInt(answersContainer.getAttribute('data-question-id'));
     const answerOptions = answersContainer.querySelectorAll('.answer-option.clickable');
+    const questionStartTime = performance.now();
     
     answerOptions.forEach(option => {
         option.addEventListener('click', function(e) {
@@ -22,6 +23,8 @@ function initQuestionOptions() {
             
             const userAnswerId = parseInt(this.getAttribute('data-option-id'));
             
+            const responseTimeMs = Math.round(performance.now() - questionStartTime);
+
             fetch('/questions', {
                 method: 'POST',
                 headers: {
@@ -29,7 +32,8 @@ function initQuestionOptions() {
                 },
                 body: JSON.stringify({
                     question_id: questionId,
-                    user_answer_id: userAnswerId
+                    user_answer_id: userAnswerId,
+                    response_time_ms: responseTimeMs
                 })
             })
             .then(response => {

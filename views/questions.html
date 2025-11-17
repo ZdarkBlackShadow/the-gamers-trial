@@ -55,6 +55,8 @@
         <p class="result-message incorrect">Malheureusement, ce n'est pas la bonne réponse.</p>
         {{end}}
         
+        <p class="score-delta">+{{.QuestionScore}} points</p>
+        
         <div class="score-info">
             <p>Ancien Score: {{.OldUserScore}}</p>
             <p>Votre nouveau Score: {{.NewUserScore}}</p>

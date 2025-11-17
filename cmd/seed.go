@@ -229,9 +229,9 @@ func seed() {
 	}
 
 	options7 := []entity.Option{
-		{Text: "Borderlands 2", QuestionID: question7.ID, Correct: false},
+		{Text: "Borderlands 2", QuestionID: question7.ID, Correct: true},
 		{Text: "Tiny Tina's Wonderlands", QuestionID: question7.ID, Correct: false},
-		{Text: "Mad Max", QuestionID: question7.ID, Correct: true},
+		{Text: "Mad Max", QuestionID: question7.ID, Correct: false},
 		{Text: "Rage 2", QuestionID: question7.ID, Correct: false},
 	}
 	for _, opt := range options7 {

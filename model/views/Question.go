@@ -12,6 +12,7 @@ type Question struct {
 	UserHasCorrect bool
 	OldUserScore   int
 	NewUserScore   int
+	QuestionScore  int
 }
 
 type Option struct {

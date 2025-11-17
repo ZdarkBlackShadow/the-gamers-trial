@@ -5,4 +5,5 @@ type UserAnswer struct {
 	OldUserScore   int
 	NewUserScore   int
 	GoodOption     string
+	QuestionScore  int
 }
