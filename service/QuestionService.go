@@ -128,3 +128,12 @@ func (s *QuestionService) GetRandomQuestion() ([]entity.Option, entity.Question,
 
 	return options, question, nil
 }
+
+func (s *QuestionService) ResetUserScore(user entity.User) (entity.User, error) {
+	user.Score = 0
+	updatedUser, err := s.userRepo.UpdateUser(user)
+	if err != nil {
+		return entity.User{}, err
+	}
+	return updatedUser, nil
+}

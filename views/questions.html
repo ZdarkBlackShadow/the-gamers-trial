@@ -9,13 +9,17 @@
     <link rel="stylesheet" href="/static/css/questions.css" />
     <script src="/static/js/questions.js"></script>
 </head>
-<body>
+<body data-series-completed="{{.SeriesCompleted}}">
     {{if .HasError}}
     <div class="error-container">
         <p class="error-type">{{.ErrorDetail.ErrorType}}</p>
         <p class="error-text">{{.ErrorDetail.ErrorText}}</p>
     </div>
     {{end}}
+
+    <div class="question-progress">
+        <p>Question {{.CurrentQuestionNumber}} / {{.QuestionLimit}}</p>
+    </div>
     
     {{if .State}}
     {{/* User must answer the question */}}
@@ -62,7 +66,11 @@
             <p>Votre nouveau Score: {{.NewUserScore}}</p>
         </div>
         
+        {{if .SeriesCompleted}}
+        <p class="redirect-message">Série terminée ! Redirection vers la page des scores dans <span id="countdown">3</span> secondes...</p>
+        {{else}}
         <p class="redirect-message">Prochaine question dans <span id="countdown">3</span> secondes...</p>
+        {{end}}
     </div>
     {{end}}
 </body>

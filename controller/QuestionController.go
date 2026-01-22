@@ -16,13 +16,17 @@ import (
 type QuestionController struct {
 	questionService *service.QuestionService
 	sessionService  *service.SessionService
+	scoreService    *service.ScoreService
 	template        *template.Template
 }
 
-func InitQuestionController(qs *service.QuestionService, sessService *service.SessionService, template *template.Template) *QuestionController {
+const maxQuestionsPerSeries = 20
+
+func InitQuestionController(qs *service.QuestionService, sessService *service.SessionService, scoreService *service.ScoreService, template *template.Template) *QuestionController {
 	return &QuestionController{
 		questionService: qs,
 		sessionService:  sessService,
+		scoreService:    scoreService,
 		template:        template,
 	}
 }
@@ -51,7 +55,54 @@ func (qc *QuestionController) Response(c *fiber.Ctx) error {
 		config.Log.Error(message + ":" + err.Error())
 		return fiber.DefaultErrorHandler(c, err)
 	}
-	err = qc.sessionService.CreateSession(c, map[string]interface{}{"user": updatedUser, "user_answer": sessionAnswer, "state": false})
+
+	sessionDetails, err := qc.sessionService.GetInterfaceByKeys(c, []string{"question_count"})
+	if err != nil {
+		config.Log.Error("error when loading session question count:" + err.Error())
+	}
+
+	questionCount := 0
+	if sessionDetails != nil {
+		if rawCount, ok := sessionDetails["question_count"]; ok {
+			switch v := rawCount.(type) {
+			case int:
+				questionCount = v
+			case int64:
+				questionCount = int(v)
+			case float64:
+				questionCount = int(v)
+			}
+		}
+	}
+
+	questionCount++
+	if questionCount > maxQuestionsPerSeries {
+		questionCount = maxQuestionsPerSeries
+	}
+
+	seriesCompleted := questionCount >= maxQuestionsPerSeries
+	if seriesCompleted {
+		if err := qc.scoreService.SaveScoreHistory(updatedUser); err != nil {
+			config.Log.Error("error when saving score history:" + err.Error())
+			return fiber.DefaultErrorHandler(c, err)
+		}
+		resetUser, resetErr := qc.questionService.ResetUserScore(updatedUser)
+		if resetErr != nil {
+			config.Log.Error("error when resetting user score:" + resetErr.Error())
+			return fiber.DefaultErrorHandler(c, resetErr)
+		}
+		updatedUser = resetUser
+	}
+
+	sessionData := map[string]interface{}{
+		"user":             updatedUser,
+		"user_answer":      sessionAnswer,
+		"state":            false,
+		"question_count":   questionCount,
+		"series_completed": seriesCompleted,
+	}
+
+	err = qc.sessionService.CreateSession(c, sessionData)
 	if err != nil {
 		return fiber.DefaultErrorHandler(c, err)
 	}
@@ -59,12 +110,14 @@ func (qc *QuestionController) Response(c *fiber.Ctx) error {
 }
 
 func (qc *QuestionController) Home(c *fiber.Ctx) error {
-	data := views.Question{}
+	data := views.Question{
+		QuestionLimit: maxQuestionsPerSeries,
+	}
 
 	// Vérifier si on doit passer à la question suivante (paramètre next=true)
 	nextQuestion := c.Query("next") == "true"
 
-	details, err := qc.sessionService.GetInterfaceByKeys(c, []string{"state", "user_answer"})
+	details, err := qc.sessionService.GetInterfaceByKeys(c, []string{"state", "user_answer", "question_count", "series_completed"})
 	if err != nil {
 		config.Log.Error("Error when read the session:" + err.Error())
 		data.HasError = true
@@ -76,10 +129,31 @@ func (qc *QuestionController) Home(c *fiber.Ctx) error {
 			if err == nil {
 				sess.Delete("state")
 				sess.Delete("user_answer")
+				sess.Delete("series_completed")
 				sess.Save()
 			}
 			details["state"] = nil
 			details["user_answer"] = nil
+			details["series_completed"] = nil
+		}
+
+		if rawCount, ok := details["question_count"]; ok {
+			switch v := rawCount.(type) {
+			case int:
+				data.QuestionsAnswered = v
+			case int64:
+				data.QuestionsAnswered = int(v)
+			case float64:
+				data.QuestionsAnswered = int(v)
+			default:
+				data.QuestionsAnswered = 0
+			}
+		}
+
+		if rawSeries, ok := details["series_completed"]; ok {
+			if finished, ok := rawSeries.(bool); ok {
+				data.SeriesCompleted = finished
+			}
 		}
 
 		if details["state"] == nil {
@@ -129,6 +203,34 @@ func (qc *QuestionController) Home(c *fiber.Ctx) error {
 			}
 		}
 	}
+
+	if data.State {
+		data.CurrentQuestionNumber = data.QuestionsAnswered + 1
+	} else {
+		if data.QuestionsAnswered == 0 {
+			data.CurrentQuestionNumber = 1
+		} else {
+			data.CurrentQuestionNumber = data.QuestionsAnswered
+		}
+	}
+
+	if data.CurrentQuestionNumber > data.QuestionLimit {
+		data.CurrentQuestionNumber = data.QuestionLimit
+	}
+
+	if data.SeriesCompleted {
+		sess, sessErr := qc.sessionService.GetSession(c)
+		if sessErr == nil {
+			sess.Delete("series_completed")
+			sess.Delete("state")
+			sess.Delete("user_answer")
+			sess.Set("question_count", 0)
+			sess.Save()
+		} else {
+			config.Log.Error("error when clearing completed series session:" + sessErr.Error())
+		}
+	}
+
 	c.Set("Content-Type", "text/html; charset=utf-8")
 	err = qc.template.ExecuteTemplate(c.Response().BodyWriter(), "questions", data)
 	if err != nil {

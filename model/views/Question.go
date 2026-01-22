@@ -13,6 +13,10 @@ type Question struct {
 	OldUserScore   int
 	NewUserScore   int
 	QuestionScore  int
+	QuestionsAnswered    int
+	CurrentQuestionNumber int
+	QuestionLimit        int
+	SeriesCompleted      bool
 }
 
 type Option struct {

@@ -65,14 +65,18 @@ function initQuestionOptions() {
 function initCountdown() {
     const countdownElement = document.getElementById('countdown');
     if (!countdownElement) return;
-    
+
+    const body = document.body;
+    const redirectToScore = body && body.getAttribute('data-series-completed') === 'true';
+    const nextUrl = redirectToScore ? '/score.html' : '/questions?next=true';
+
     let countdown = 3;
     const interval = setInterval(() => {
         countdown--;
         countdownElement.textContent = countdown;
         if (countdown <= 0) {
             clearInterval(interval);
-            window.location.href = '/questions?next=true';
+            window.location.href = nextUrl;
         }
     }, 1000);
 }

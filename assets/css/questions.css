@@ -133,3 +133,16 @@
     border: 2px solid #9370db;
 }
 
+.question-progress {
+    position: fixed;
+    top: 20px;
+    right: 30px;
+    color: #ffffff;
+    font-size: 1.1rem;
+    text-shadow: 0 0 10px #9370db;
+    background: rgba(20, 10, 40, 0.4);
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    border: 1px solid #9370db;
+}
+

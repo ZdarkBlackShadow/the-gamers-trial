@@ -56,7 +56,7 @@ func main() {
 
 	homeController := controller.InitHomeController(template, sessionService)
 	authentificationController := controller.InitAuthentificationController(template, sessionService, authentificationService)
-	questionsController := controller.InitQuestionController(questionService, sessionService, template)
+	questionsController := controller.InitQuestionController(questionService, sessionService, scoreService, template)
 	scoreController := controller.InitScoreController(template, authentificationService, scoreService)
 	imageController := controller.InitImageController(imageService)
 
@@ -75,6 +75,7 @@ func main() {
 
 	scoreRoutes := app.Group("/score")
 	routes.RegisterScoreRoutes(scoreRoutes, scoreController)
+	app.Get("/score.html", scoreController.Score)
 
 	imageRoutes := app.Group("/image")
 	routes.RegisterImageRoutes(imageRoutes, imageController)

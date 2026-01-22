@@ -85,7 +85,7 @@ func (ac *AuthentificationController) Register(c *fiber.Ctx) error {
 	}
 	config.Log.Debug("test")
 
-	err = ac.sessionService.CreateSession(c, map[string]interface{}{"user": newUser})
+	err = ac.sessionService.CreateSession(c, map[string]interface{}{"user": newUser, "question_count": 0})
 	if err != nil {
 		return fiber.DefaultErrorHandler(c, err)
 	}
@@ -114,7 +114,7 @@ func (ac *AuthentificationController) Login(c *fiber.Ctx) error {
 		return c.Redirect("/authentification", fiber.StatusSeeOther)
 	}
 
-	err = ac.sessionService.CreateSession(c, map[string]interface{}{"user": user})
+	err = ac.sessionService.CreateSession(c, map[string]interface{}{"user": user, "question_count": 0})
 	if err != nil {
 		return fiber.DefaultErrorHandler(c, err)
 	}

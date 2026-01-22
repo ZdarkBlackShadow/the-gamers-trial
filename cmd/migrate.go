@@ -18,6 +18,7 @@ func migrate() {
 		&entity.Image{},
 		&entity.Question{},
 		&entity.Option{},
+		&entity.ScoreHistory{},
 	)
 
 	if err != nil {
